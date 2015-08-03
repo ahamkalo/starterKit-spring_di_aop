@@ -47,60 +47,63 @@ public class BookServiceImplTest {
 		Mockito.verify(bookDao).save(book);
 		assertEquals(1L, result.getId().longValue());
 	}
-	
-    @Test
-    public void testShouldFindAllBooks() {
-    	//given
-    	Mockito.when(bookDao.findAll())
-		.thenReturn(Arrays.asList(new BookEntity(1L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko")))));
-        // when
-        List<BookTo> allBooks = bookService.findAllBooks();
-        // then
-        Mockito.verify(bookDao).findAll();
-        assertNotNull(allBooks);
-        assertFalse(allBooks.isEmpty());
-        assertEquals(1, allBooks.size());
-    }
-    
-    @Test
-    public void testShouldFindAllBooksByTitle() {
-        // given
-    	final String title = "t";
-    	Mockito.when(bookDao.findBookByTitle(title))
-		.thenReturn(Arrays.asList(new BookEntity(1L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko")))));
-        // when
-        List<BookTo> booksByTitle = bookService.findBooksByTitle(title);
-        // then
-        Mockito.verify(bookDao).findBookByTitle(title);
-        assertNotNull(booksByTitle);
-        assertFalse(booksByTitle.isEmpty());
-        assertEquals(1,booksByTitle.size());
-    }
-    @Test
-    public void testShouldFindAllBooksByAuthor() {
-    	// given
-    	final String author = "imi";
-    	Mockito.when(bookDao.findBooksByAuthor(author))
-		.thenReturn(Arrays.asList(new BookEntity(1L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko")))));
-    	// when
-    	List<BookTo> booksByAuthor = bookService.findBooksByAuthor(author);
-    	// then
-    	Mockito.verify(bookDao).findBooksByAuthor(author);
-    	assertNotNull(booksByAuthor);
-    	assertFalse(booksByAuthor.isEmpty());
-    	assertEquals(1,booksByAuthor.size());
-    }
 
-    @Test(expected = BookNotNullIdException.class)
-    public void testShouldThrowBookNotNullIdException() {
-        // given
-    	BookEntity book = new BookEntity(2L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko")));
-    	Mockito.when(bookDao.save(book))
-		.thenThrow(new BookNotNullIdException());
-        // when
-        bookService.saveBook(bookMapper.convertToTo(book));
-        // then
-        Mockito.verify(bookDao).save(book);
-        fail("test should throw BookNotNullIdException");
-    }
+	@Test
+	public void testShouldFindAllBooks() {
+		// given
+		Mockito.when(bookDao.findAll()).thenReturn(
+				Arrays.asList(new BookEntity(1L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko"))),
+						new BookEntity(2L, "title2", Arrays.asList(new AuthorTo(1L, "imie2", "nazwisko2")))));
+		// when
+		List<BookTo> allBooks = bookService.findAllBooks();
+		// then
+		Mockito.verify(bookDao).findAll();
+		assertNotNull(allBooks);
+		assertFalse(allBooks.isEmpty());
+		assertEquals(2, allBooks.size());
+	}
+
+	@Test
+	public void testShouldFindAllBooksByTitle() {
+		// given
+		final String title = "t";
+		Mockito.when(bookDao.findBookByTitle(title)).thenReturn(
+				Arrays.asList(new BookEntity(1L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko"))),
+						new BookEntity(2L, "title2", Arrays.asList(new AuthorTo(1L, "imie2", "nazwisko2")))));
+		// when
+		List<BookTo> booksByTitle = bookService.findBooksByTitle(title);
+		// then
+		Mockito.verify(bookDao).findBookByTitle(title);
+		assertNotNull(booksByTitle);
+		assertFalse(booksByTitle.isEmpty());
+		assertEquals(2, booksByTitle.size());
+	}
+
+	@Test
+	public void testShouldFindAllBooksByAuthor() {
+		// given
+		final String author = "imi";
+		Mockito.when(bookDao.findBooksByAuthor(author)).thenReturn(
+				Arrays.asList(new BookEntity(1L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko"))),
+						new BookEntity(2L, "title2", Arrays.asList(new AuthorTo(1L, "imie2", "nazwisko2")))));
+		// when
+		List<BookTo> booksByAuthor = bookService.findBooksByAuthor(author);
+		// then
+		Mockito.verify(bookDao).findBooksByAuthor(author);
+		assertNotNull(booksByAuthor);
+		assertFalse(booksByAuthor.isEmpty());
+		assertEquals(2, booksByAuthor.size());
+	}
+
+	@Test(expected = BookNotNullIdException.class)
+	public void testShouldThrowBookNotNullIdException() {
+		// given
+		BookEntity book = new BookEntity(2L, "title", Arrays.asList(new AuthorTo(1L, "imie", "nazwisko")));
+		Mockito.when(bookDao.save(book)).thenThrow(new BookNotNullIdException());
+		// when
+		bookService.saveBook(bookMapper.convertToTo(book));
+		// then
+		Mockito.verify(bookDao).save(book);
+		fail("test should throw BookNotNullIdException");
+	}
 }
